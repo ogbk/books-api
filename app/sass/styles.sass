@@ -1,0 +1,102 @@
+// sass-lint:disable nesting-depth
+// sass-lint:disable no-vendor-prefixes
+
+$blue: #00f;
+$grey: #808080;
+$green: #008000;
+$red: #f00;
+$black: #000;
+
+$hover-color: #0f0 // green INSTEAD OF orange #ffa500 
+$border-color: #999
+$clicked-row-color: #0f0 // green
+
+.hide
+  visibility: hidden;
+
+.good
+  color: $green;
+
+.error
+  color: $red;
+
+*
+  font-size: 1em;
+
+.input-ok
+  border: 0;
+  border-bottom: 1px solid $blue;
+
+.input-error
+  border: 0;
+  border-bottom: 1px solid $red;
+
+body
+  font-family: sans-serif, Consolas
+
+.click
+  cursor: pointer
+
+.hover-row
+  background-color: $hover-color
+
+.clicked-row
+  background-color: $clicked-row-color
+
+
+.app
+  font-size: 1em;
+  margin: 1% 2% 2%;
+  min-width: 630px;
+  width: 90%;
+
+  .search-bar
+    font-size: 1.5em;
+    margin-bottom: 2em;
+    margin-top: 1em;
+
+    input
+      width: 25em;
+
+
+  .items
+    display: flex
+    flex-direction: row
+    overflow: hidden
+
+    .items-list,
+    .item-details
+      flex-grow: 1
+      height: 80vh
+      width: 50%
+        
+    .item-details
+      flex-grow: 1
+      font-family: Consolas;
+      margin-left: 3em
+
+      img
+        width: 480px
+        height: 693px
+
+    .items-list
+      border: .2px solid $black
+      overflow-y: auto
+
+      table
+        width: 100%
+
+        td,
+        th
+          border: 1px solid $border-color
+          padding: .2rem
+          text-align: left
+
+        tbody
+          tr
+            &:hover
+              background-color: $hover-color
+
+            td
+              width: 100px
+
