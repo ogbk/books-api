@@ -5,7 +5,7 @@ import { Preview } from './Preview';
 
 export type Book = {
   id: string,
-  book_author: Array<string>,
+  book_author: string,
   book_pages: number,
   book_publication_city: string,
   book_publication_country: string,
@@ -19,7 +19,8 @@ type State = {
   selectedBook: Book,
   selectedBookId: string,
   matchedBooks: Array<Book>,
-  bookClicked: boolean;
+  bookClicked: boolean,
+  fetchError: string,
 };
 
 export class App extends Component<{}, State> {
@@ -36,6 +37,7 @@ export class App extends Component<{}, State> {
       selectedBookId: '',
       matchedBooks: [],
       bookClicked: false,
+      fetchError: '',
     };
 
     // this.searchBook = this.searchBook.bind(this);
@@ -53,7 +55,9 @@ export class App extends Component<{}, State> {
           matchedBooks: res.books,
         });
       })
-      .catch(err => console.log(`Request failed--: ${err}`));
+      .catch((err) => {
+        this.setState({ fetchError: err });
+      });
   }
 
   /*
