@@ -24,7 +24,7 @@ type State = {
 };
 
 export class App extends Component<{}, State> {
-  // searchBook: (any) => void;
+  searchBook: (any) => void;
   selectBook: (book: Book) => void;
 
   constructor() {
@@ -40,11 +40,11 @@ export class App extends Component<{}, State> {
       fetchError: '',
     };
 
-    // this.searchBook = this.searchBook.bind(this);
+    this.searchBook = this.searchBook.bind(this);
     this.selectBook = this.selectBook.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     fetch('http://nyx.vima.ekt.gr:3000/api/books', {
       method: 'POST',
     })
@@ -60,12 +60,11 @@ export class App extends Component<{}, State> {
       });
   }
 
-  /*
   searchBook(evt: any): void {
     const searchKey = evt.target.value.toLowerCase();
     const { listBooks: books } = this.state;
     const matchedBooks = books.filter(
-      ({ product_title }) => (product_title.toLowerCase().includes(searchKey)),
+      ({ book_title }) => (book_title.toLowerCase().includes(searchKey)),
     );
 
     this.setState({
@@ -73,7 +72,6 @@ export class App extends Component<{}, State> {
       matchedBooks,
     });
   }
-  */
 
   selectBook(book: Book): void {
     const { id } = book;
@@ -90,6 +88,14 @@ export class App extends Component<{}, State> {
 
     return (
       <div className="app">
+        <div className="search-bar">
+          <span>Find book by title &nbsp; : &nbsp; &nbsp;</span>
+          <input
+            type="text"
+            className={matchedBooks.length ? 'input-ok' : 'input-error'}
+            onChange={this.searchBook}
+          />
+        </div>
         <div className="items">
           <div className="items-list">
             <table>

@@ -11,9 +11,9 @@ export const Preview = ({ book }: {book: Book}) => {
   } = book;
   return (
     <div>
-      <span>{`Book ID  ---  ${id}`}</span><br />
-      <span>{`Author  ---  ${book_author}`}</span><br />
-      <span>{`Title       ---  ${book_title}`}</span><br />
+      <span>{`Book ID  ---  ${id}`}</span><br /><br />
+      <span>{`Author  ---  ${book_author}`}</span><br /><br />
+      <span>{`Title       ---  ${book_title}`}</span>
     </div>
   );
 };
