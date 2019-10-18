@@ -19,7 +19,7 @@ type State = {
   selectedBookId: string,
   matchedBooks: Array<Book>,
   bookClicked: boolean,
-  fetchError: boolean,
+  fetchError: string,
   loading: boolean,
 };
 
@@ -37,7 +37,7 @@ export class App extends Component<{}, State> {
       selectedBookId: '',
       matchedBooks: [],
       bookClicked: false,
-      fetchError: false,
+      fetchError: '',
       loading: true,
     };
 
@@ -57,7 +57,7 @@ export class App extends Component<{}, State> {
       });
     } catch (err) {
       this.setState({
-        fetchError: true,
+        fetchError: String(err),
         loading: false,
       });
     }
@@ -111,11 +111,19 @@ export class App extends Component<{}, State> {
               <tbody>
                 {
                   fetchError
-                    ? <tr className="error"> Fetch error </tr>
+                    ? (
+                      <tr>
+                        <td>
+                          {!loading && `${fetchError}`}
+                        </td>
+                      </tr>
+                    )
                     : matchedBooks.map((item) => (
                       <tr
                         key={`tr_${item.id}`}
-                        className={item.id === selectedBookId ? 'click clicked-row' : 'click'}
+                        className={item.id === selectedBookId
+                          ? 'click clicked-row'
+                          : 'click'}
                         onClick={() => this.selectBook(item)}
                       >
                         <td key={`td_${item.id}`}>
