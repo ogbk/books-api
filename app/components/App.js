@@ -15,12 +15,13 @@ export type Book = {
 
 type State = {
   searchKey: string,
-  listBooks: Array<Book>,
+  allBooks: Array<Book>,
   selectedBook: Book,
   selectedBookId: string,
   matchedBooks: Array<Book>,
   bookClicked: boolean,
   fetchError: string,
+  loading: boolean,
 };
 
 export class App extends Component<{}, State> {
@@ -33,12 +34,13 @@ export class App extends Component<{}, State> {
 
     this.state = {
       searchKey: '',
-      listBooks: [],
+      allBooks: [],
       selectedBook: {},
       selectedBookId: '',
       matchedBooks: [],
       bookClicked: false,
       fetchError: '',
+      loading: true,
     };
 
     this.searchBook = this.searchBook.bind(this);
@@ -51,17 +53,21 @@ export class App extends Component<{}, State> {
       const { books } = await res.json();
 
       this.setState({
-        listBooks: books,
+        allBooks: books,
         matchedBooks: books,
+        loading: false,
       });
     } catch (err) {
-      this.setState({ fetchError: err });
+      this.setState({
+        fetchError: err,
+        loading: false,
+      });
     }
   }
 
   searchBook(evt: any): void {
     const searchKey = evt.target.value.toLowerCase();
-    const { listBooks: books } = this.state;
+    const { allBooks: books } = this.state;
     const matchedBooks = books.filter(
       ({ book_title }) => (book_title.toLowerCase().includes(searchKey)),
     );
@@ -88,6 +94,7 @@ export class App extends Component<{}, State> {
       selectedBookId,
       bookClicked,
       matchedBooks,
+      loading,
     } = this.state;
 
     return (
@@ -96,7 +103,7 @@ export class App extends Component<{}, State> {
           <span>Find book by title &nbsp; : &nbsp; &nbsp;</span>
           <input
             type="text"
-            className={matchedBooks.length ? 'input-ok' : 'input-error'}
+            className={(loading || matchedBooks.length) ? 'input-ok' : 'input-error'}
             onChange={this.searchBook}
           />
         </div>
