@@ -14,7 +14,6 @@ export type Book = {
 };
 
 type State = {
-  searchKey: string,
   allBooks: Array<Book>,
   selectedBook: Book,
   selectedBookId: string,
@@ -33,7 +32,6 @@ export class App extends Component<{}, State> {
     super();
 
     this.state = {
-      searchKey: '',
       allBooks: [],
       selectedBook: {},
       selectedBookId: '',
@@ -65,15 +63,14 @@ export class App extends Component<{}, State> {
     }
   }
 
-  searchBook(evt: any): void {
-    const searchKey = evt.target.value.toLowerCase();
-    const { allBooks: books } = this.state;
-    const matchedBooks = books.filter(
+  searchBook({ target: { value } }: any): void {
+    const searchKey = value.toLowerCase();
+    const { allBooks } = this.state;
+    const matchedBooks = allBooks.filter(
       ({ book_title }) => (book_title.toLowerCase().includes(searchKey)),
     );
 
     this.setState({
-      searchKey,
       matchedBooks,
     });
   }
