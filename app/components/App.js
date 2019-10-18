@@ -25,6 +25,7 @@ type State = {
 
 export class App extends Component<{}, State> {
   searchBook: (any) => void;
+
   selectBook: (book: Book) => void;
 
   constructor() {
@@ -48,7 +49,7 @@ export class App extends Component<{}, State> {
     fetch('http://nyx.vima.ekt.gr:3000/api/books', {
       method: 'POST',
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((res) => {
         this.setState({
           listBooks: res.books,
@@ -84,7 +85,12 @@ export class App extends Component<{}, State> {
   }
 
   render() {
-    const { selectedBook, selectedBookId, bookClicked, matchedBooks } = this.state;
+    const {
+      selectedBook,
+      selectedBookId,
+      bookClicked,
+      matchedBooks,
+    } = this.state;
 
     return (
       <div className="app">
@@ -102,13 +108,15 @@ export class App extends Component<{}, State> {
               <tbody>
                 {
                   matchedBooks
-                    .map(item => (
+                    .map((item) => (
                       <tr
                         key={`tr_${item.id}`}
                         className={item.id === selectedBookId ? 'click clicked-row' : 'click'}
                         onClick={() => this.selectBook(item)}
                       >
-                        <td key={`td_${item.id}`}> {item.book_title} </td>
+                        <td key={`td_${item.id}`}>
+                          {item.book_title}
+                        </td>
                       </tr>
                     ))
                 }
@@ -118,8 +126,8 @@ export class App extends Component<{}, State> {
 
           <div className="item-details">
             {
-              bookClicked &&
-              <Preview book={selectedBook} />
+              bookClicked
+              && <Preview book={selectedBook} />
             }
           </div>
         </div>
