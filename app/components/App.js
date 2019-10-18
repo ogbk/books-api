@@ -45,20 +45,18 @@ export class App extends Component<{}, State> {
     this.selectBook = this.selectBook.bind(this);
   }
 
-  componentWillMount() {
-    fetch('http://nyx.vima.ekt.gr:3000/api/books', {
-      method: 'POST',
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        this.setState({
-          listBooks: res.books,
-          matchedBooks: res.books,
-        });
-      })
-      .catch((err) => {
-        this.setState({ fetchError: err });
+  async componentDidMount() {
+    try {
+      const res = await fetch('http://nyx.vima.ekt.gr:3000/api/books', { method: 'POST' });
+      const { books } = await res.json();
+
+      this.setState({
+        listBooks: books,
+        matchedBooks: books,
       });
+    } catch (err) {
+      this.setState({ fetchError: err });
+    }
   }
 
   searchBook(evt: any): void {
