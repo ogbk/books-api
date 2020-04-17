@@ -24,28 +24,17 @@ type State = {
 };
 
 export class App extends Component<{}, State> {
-  searchBook: (any) => void;
+  state:State = {
+    fetchedBooks: [],
+    bookToPreview: {},
+    matchedBooks: [],
+    previewOn: false,
+    loading: true,
+    fetchError: false,
+    fetchOK: false,
+  };
 
-  showBookPreview: (book: Book) => void;
-
-  constructor() {
-    super();
-
-    this.state = {
-      fetchedBooks: [],
-      bookToPreview: {},
-      matchedBooks: [],
-      previewOn: false,
-      loading: true,
-      fetchError: false,
-      fetchOK: false,
-    };
-
-    this.searchBook = this.searchBook.bind(this);
-    this.showBookPreview = this.showBookPreview.bind(this);
-  }
-
-  async componentDidMount() {
+  componentDidMount = async () => {
     try {
       const res = await fetch('http://nyx.vima.ekt.gr:3000/api/books', { method: 'POST' });
       const { books } = await res.json();
@@ -65,7 +54,7 @@ export class App extends Component<{}, State> {
     }
   }
 
-  searchBook({ target: { value } }: any): void {
+  searchBook = ({ target: { value } }: any): void => {
     const searchKey = value.toLowerCase();
     const { fetchedBooks } = this.state;
     const matchedBooks = fetchedBooks.filter(
@@ -77,7 +66,7 @@ export class App extends Component<{}, State> {
     });
   }
 
-  showBookPreview(book: Book): void {
+  showBookPreview = (book: Book): void => {
     this.setState({
       bookToPreview: book,
       previewOn: true,
