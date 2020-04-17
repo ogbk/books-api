@@ -109,7 +109,11 @@ export class App extends Component<{}, State> {
             <table>
               <tbody>
                 {loading && (
-                  <tr><td className="line-loading">Loading...</td></tr>
+                  <tr>
+                    <td className="line-loading">
+                      <div className="loading" />
+                    </td>
+                  </tr>
                 )}
 
                 {fetchError
