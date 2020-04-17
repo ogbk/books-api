@@ -14,11 +14,11 @@ export type Book = {
 };
 
 type State = {
-  allBooks: Array<Book>,
-  selectedBook: Book,
-  selectedBookId: string,
+  fetchedBooks: Array<Book>,
+  bookToPreview: Book,
+  bookToPreviewId: string,
   matchedBooks: Array<Book>,
-  bookClicked: boolean,
+  previewOn: boolean,
   fetchError: string,
   loading: boolean,
 };
@@ -26,23 +26,23 @@ type State = {
 export class App extends Component<{}, State> {
   searchBook: (any) => void;
 
-  selectBook: (book: Book) => void;
+  showBookPreview: (book: Book) => void;
 
   constructor() {
     super();
 
     this.state = {
-      allBooks: [],
-      selectedBook: {},
-      selectedBookId: '',
+      fetchedBooks: [],
+      bookToPreview: {},
+      bookToPreviewId: '',
       matchedBooks: [],
-      bookClicked: false,
+      previewOn: false,
       fetchError: '',
       loading: true,
     };
 
     this.searchBook = this.searchBook.bind(this);
-    this.selectBook = this.selectBook.bind(this);
+    this.showBookPreview = this.showBookPreview.bind(this);
   }
 
   async componentDidMount() {
@@ -51,7 +51,7 @@ export class App extends Component<{}, State> {
       const { books } = await res.json();
 
       this.setState({
-        allBooks: books,
+        fetchedBooks: books,
         matchedBooks: books,
         loading: false,
       });
@@ -65,8 +65,8 @@ export class App extends Component<{}, State> {
 
   searchBook({ target: { value } }: any): void {
     const searchKey = value.toLowerCase();
-    const { allBooks } = this.state;
-    const matchedBooks = allBooks.filter(
+    const { fetchedBooks } = this.state;
+    const matchedBooks = fetchedBooks.filter(
       ({ book_title }) => (book_title.toLowerCase().includes(searchKey)),
     );
 
@@ -75,21 +75,21 @@ export class App extends Component<{}, State> {
     });
   }
 
-  selectBook(book: Book): void {
+  showBookPreview(book: Book): void {
     const { id } = book;
 
     this.setState({
-      selectedBook: book,
-      selectedBookId: id,
-      bookClicked: true,
+      bookToPreview: book,
+      bookToPreviewId: id,
+      previewOn: true,
     });
   }
 
   render() {
     const {
-      selectedBook,
-      selectedBookId,
-      bookClicked,
+      bookToPreview,
+      bookToPreviewId,
+      previewOn,
       matchedBooks,
       fetchError,
       loading,
@@ -121,10 +121,10 @@ export class App extends Component<{}, State> {
                     : matchedBooks.map((item) => (
                       <tr
                         key={`tr_${item.id}`}
-                        className={item.id === selectedBookId
+                        className={item.id === bookToPreviewId
                           ? 'click clicked-row'
                           : 'click'}
-                        onClick={() => this.selectBook(item)}
+                        onClick={() => this.showBookPreview(item)}
                       >
                         <td key={`td_${item.id}`}>
                           {item.book_title}
@@ -138,8 +138,8 @@ export class App extends Component<{}, State> {
 
           <div className="item-details">
             {
-              bookClicked
-              && <Preview book={selectedBook} />
+              previewOn
+              && <Preview book={bookToPreview} />
             }
           </div>
         </div>
