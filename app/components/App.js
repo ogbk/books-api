@@ -16,7 +16,6 @@ export type Book = {
 type State = {
   fetchedBooks: Array<Book>,
   bookToPreview: Book,
-  bookToPreviewId: string,
   matchedBooks: Array<Book>,
   previewOn: boolean,
   fetchError: string,
@@ -34,7 +33,6 @@ export class App extends Component<{}, State> {
     this.state = {
       fetchedBooks: [],
       bookToPreview: {},
-      bookToPreviewId: '',
       matchedBooks: [],
       previewOn: false,
       fetchError: '',
@@ -76,11 +74,8 @@ export class App extends Component<{}, State> {
   }
 
   showBookPreview(book: Book): void {
-    const { id } = book;
-
     this.setState({
       bookToPreview: book,
-      bookToPreviewId: id,
       previewOn: true,
     });
   }
@@ -88,7 +83,6 @@ export class App extends Component<{}, State> {
   render() {
     const {
       bookToPreview,
-      bookToPreviewId,
       previewOn,
       matchedBooks,
       fetchError,
@@ -121,7 +115,7 @@ export class App extends Component<{}, State> {
                     : matchedBooks.map((item) => (
                       <tr
                         key={`tr_${item.id}`}
-                        className={item.id === bookToPreviewId
+                        className={item.id === bookToPreview.id
                           ? 'click clicked-row'
                           : 'click'}
                         onClick={() => this.showBookPreview(item)}
