@@ -18,8 +18,9 @@ type State = {
   bookToPreview: Book,
   matchedBooks: Array<Book>,
   previewOn: boolean,
-  fetchError: string,
   loading: boolean,
+  fetchError: boolean,
+  fetchOK: boolean,
 };
 
 export class App extends Component<{}, State> {
@@ -35,8 +36,9 @@ export class App extends Component<{}, State> {
       bookToPreview: {},
       matchedBooks: [],
       previewOn: false,
-      fetchError: '',
       loading: true,
+      fetchError: false,
+      fetchOK: false,
     };
 
     this.searchBook = this.searchBook.bind(this);
@@ -49,14 +51,16 @@ export class App extends Component<{}, State> {
       const { books } = await res.json();
 
       this.setState({
+        loading: false,
+        fetchError: false,
+        fetchOK: true,
         fetchedBooks: books,
         matchedBooks: books,
-        loading: false,
       });
     } catch (err) {
       this.setState({
-        fetchError: String(err),
         loading: false,
+        fetchError: true,
       });
     }
   }
@@ -85,8 +89,9 @@ export class App extends Component<{}, State> {
       bookToPreview,
       previewOn,
       matchedBooks,
-      fetchError,
       loading,
+      fetchError,
+      fetchOK,
     } = this.state;
 
     return (
@@ -103,29 +108,23 @@ export class App extends Component<{}, State> {
           <div className="items-list">
             <table>
               <tbody>
-                {
-                  fetchError
-                    ? (
-                      <tr>
-                        <td>
-                          {!loading && `${fetchError}`}
-                        </td>
-                      </tr>
-                    )
-                    : matchedBooks.map((item) => (
-                      <tr
-                        key={`tr_${item.id}`}
-                        className={item.id === bookToPreview.id
-                          ? 'click clicked-row'
-                          : 'click'}
-                        onClick={() => this.showBookPreview(item)}
-                      >
-                        <td key={`td_${item.id}`}>
-                          {item.book_title}
-                        </td>
-                      </tr>
-                    ))
-                }
+                {loading && <tr><td>Loading...</td></tr>}
+                {fetchError
+                  && <tr><td>Unable to fetch data. Please check internet connection.</td></tr>}
+                {fetchOK && matchedBooks.map((item) => (
+                  <tr
+                    key={`tr_${item.id}`}
+                    className={item.id === bookToPreview.id
+                      ? 'click clicked-row'
+                      : 'click'}
+                    onClick={() => this.showBookPreview(item)}
+                  >
+                    <td key={`td_${item.id}`}>
+                      {item.book_title}
+                    </td>
+                  </tr>
+                ))}
+
               </tbody>
             </table>
           </div>
