@@ -6,6 +6,7 @@ $grey: #808080
 $green: #008000
 $red: #f00
 $black: #000
+$yellow: #ff0
 $primary-color: #1d7874
 
 $hover-color: #0f0 // green INSTEAD OF orange #ffa500 
@@ -97,9 +98,15 @@ body
 
         tbody
           tr
-            &:hover
-              background-color: $hover-color
-
             td
               width: 100px
 
+            .line-ok
+              &:hover
+                background-color: $hover-color
+
+            .line-error
+              color: $red
+
+            .line-loading
+              color: $blue

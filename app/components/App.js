@@ -108,9 +108,19 @@ export class App extends Component<{}, State> {
           <div className="items-list">
             <table>
               <tbody>
-                {loading && <tr><td>Loading...</td></tr>}
+                {loading && (
+                  <tr><td className="line-loading">Loading...</td></tr>
+                )}
+
                 {fetchError
-                  && <tr><td>Unable to fetch data. Please check internet connection.</td></tr>}
+                  && (
+                    <tr>
+                      <td className="line-error">
+                        Unable to fetch data. Please check internet connection.
+                      </td>
+                    </tr>
+                  )}
+
                 {fetchOK && matchedBooks.map((item) => (
                   <tr
                     key={`tr_${item.id}`}
