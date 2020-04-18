@@ -1,7 +1,7 @@
 # books-api
 
 React SPA web page:
-- loads list of books from 'http://nyx.vima.ekt.gr:3000/api/books', via a POST call
+- loads list of books from 'http://nyx.vima.ekt.gr:3000/api/books'
 - search and filter books based on title
 - select a particular book and display its details
 
