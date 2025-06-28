@@ -2,14 +2,13 @@
   "name": "books-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "dev": "webpack-dev-server --hot --open",
     "serve": "webpack serve --open",
     "prod": "webpack",
     "sass-lint": "sass-lint app/sass/styles.sass --verbose -q",
-    "eslint": "eslint app/",
-    "flow": "flow"
+    "eslint": "eslint app/"
   },
   "author": "",
   "license": "ISC",
@@ -46,7 +45,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.27.2",
-    "@babel/preset-flow": "7.0.0",
+    "@babel/preset-typescript": "^7.27.1",
     "babel-eslint": "10.0.3",
     "eslint": "6.5.1",
     "eslint-config-airbnb": "18.0.1",
@@ -55,7 +54,6 @@
     "eslint-plugin-react": "7.16.0",
     "eslint-plugin-react-hooks": "1.7.0",
     "eslint-watch": "6.0.1",
-    "flow-bin": "0.109.0",
     "sass-lint": "1.12.1"
   }
 }

@@ -1,7 +1,5 @@
-// @flow
-
 import React from 'react';
-import type { Book } from './App';
+import type { Book } from './App.tsx';
 
 export const Preview = ({ book }: {book: Book}) => {
   const {

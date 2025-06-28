@@ -1,7 +1,5 @@
-// @flow
-
 import React, { Component } from 'react';
-import { Preview } from './Preview';
+import { Preview } from './Preview.tsx';
 
 export type Book = {
   id: string,
