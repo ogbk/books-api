@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Book } from './App.tsx';
+import type { Book } from '../utils/types';
 
 export const Preview = ({ book }: {book: Book}) => {
   const {
