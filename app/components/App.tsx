@@ -1,134 +1,93 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Preview } from './Preview.tsx';
 import type { Book } from '../utils/types';
 
-type State = {
-  fetchedBooks: Array<Book>,
-  bookToPreview: Book,
-  matchedBooks: Array<Book>,
-  previewOn: boolean,
-  loading: boolean,
-  fetchError: boolean,
-  fetchOK: boolean,
-};
+const App = () => {
+  const [books, setBooks] = useState<Array<Book>>([]);
+  const [matchedBooks, setMatchedBooks] = useState<Array<Book>>([]);
+  const [bookToPreview, setBookToPreview] = useState<Book>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchOk, setFetchOk] = useState(false);
 
-export class App extends Component<{}, State> {
-  state:State = {
-    fetchedBooks: [],
-    bookToPreview: {},
-    matchedBooks: [],
-    previewOn: false,
-    loading: true,
-    fetchError: false,
-    fetchOK: false,
-  };
+  useEffect(
+    () => {
+      fetch('http://nyx.vima.ekt.gr:3000/api/books', { method: 'POST' })
+        .then(ris => ris.json())
+        .then(({books}) =>{
+          setBooks(books);
+          setMatchedBooks(books);
+          setFetchOk(true);
+        })
+        .catch(() => {setFetchOk(false)})
+        .finally(() => {setIsLoading(false)})
+    },[]
+  );
 
-  componentDidMount = async () => {
-    try {
-      const res = await fetch('http://nyx.vima.ekt.gr:3000/api/books', { method: 'POST' });
-      const { books } = await res.json();
-
-      this.setState({
-        loading: false,
-        fetchError: false,
-        fetchOK: true,
-        fetchedBooks: books,
-        matchedBooks: books,
-      });
-    } catch (err) {
-      this.setState({
-        loading: false,
-        fetchError: true,
-      });
-    }
-  }
-
-  searchBook = ({ target: { value } }: any): void => {
+  const searchBook = ({ target: { value }}: React.ChangeEvent<HTMLInputElement>): void => {
     const searchKey = value.toLowerCase();
-    const { fetchedBooks } = this.state;
-    const matchedBooks = fetchedBooks.filter(
+    const filteredBooks = books.filter(
       ({ book_title }) => (book_title.toLowerCase().includes(searchKey)),
     );
-
-    this.setState({
-      matchedBooks,
-    });
+    setMatchedBooks(filteredBooks);
   }
 
-  showBookPreview = (book: Book): void => {
-    this.setState({
-      bookToPreview: book,
-      previewOn: true,
-    });
-  }
+  return (
+    <div className="app">
+      <div className="search-bar">
+        <span>Find book by title &nbsp; : &nbsp; &nbsp;</span>
+        <input
+          type="text"
+          className={(isLoading || matchedBooks.length) ? 'input-ok' : 'input-error'}
+          onChange={searchBook}
+        />
+      </div>
+      <div className="items">
+        <div className="items-list">
+          <table>
+            <tbody>
+              {isLoading && (
+                <tr>
+                  <td className="line-loading">
+                    <div className="loading" />
+                  </td>
+                </tr>
+              )}
 
-  render() {
-    const {
-      bookToPreview,
-      previewOn,
-      matchedBooks,
-      loading,
-      fetchError,
-      fetchOK,
-    } = this.state;
-
-    return (
-      <div className="app">
-        <div className="search-bar">
-          <span>Find book by title &nbsp; : &nbsp; &nbsp;</span>
-          <input
-            type="text"
-            className={(loading || matchedBooks.length) ? 'input-ok' : 'input-error'}
-            onChange={this.searchBook}
-          />
-        </div>
-        <div className="items">
-          <div className="items-list">
-            <table>
-              <tbody>
-                {loading && (
+              {!isLoading && !fetchOk
+                && (
                   <tr>
-                    <td className="line-loading">
-                      <div className="loading" />
+                    <td className="line-error">
+                      Unable to fetch data. Please check internet connection.
                     </td>
                   </tr>
                 )}
 
-                {fetchError
-                  && (
-                    <tr>
-                      <td className="line-error">
-                        Unable to fetch data. Please check internet connection.
-                      </td>
-                    </tr>
-                  )}
+              {!isLoading && fetchOk && matchedBooks.map((item) => (
+                <tr
+                  key={`tr_${item.id}`}
+                  className={item.id === bookToPreview?.id
+                    ? 'click clicked-row'
+                    : 'click'}
+                  onClick={() => {setBookToPreview(item)}}
+                >
+                  <td key={`td_${item.id}`}>
+                    {item.book_title}
+                  </td>
+                </tr>
+              ))}
 
-                {fetchOK && matchedBooks.map((item) => (
-                  <tr
-                    key={`tr_${item.id}`}
-                    className={item.id === bookToPreview.id
-                      ? 'click clicked-row'
-                      : 'click'}
-                    onClick={() => this.showBookPreview(item)}
-                  >
-                    <td key={`td_${item.id}`}>
-                      {item.book_title}
-                    </td>
-                  </tr>
-                ))}
+            </tbody>
+          </table>
+        </div>
 
-              </tbody>
-            </table>
-          </div>
-
-          <div className="item-details">
-            {
-              previewOn
-              && <Preview book={bookToPreview} />
-            }
-          </div>
+        <div className="item-details">
+          {
+            !!bookToPreview && <Preview book={bookToPreview} />
+          }
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default App;
